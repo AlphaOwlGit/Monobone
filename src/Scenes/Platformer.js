@@ -16,6 +16,11 @@ class Platformer extends Phaser.Scene {
         this.coinTotal = 20;
     }
 
+preload() {
+    this.load.setPath("./assets/");
+    this.load.bitmapFont("rocketSquare", "KennyRocketSquare_0.png", "KennyRocketSquare.fnt");
+}
+
     create() {
         // Create a new tilemap game object which uses 18x18 pixel tiles, and is
         // 45 tiles wide and 25 tiles tall.
@@ -63,6 +68,9 @@ class Platformer extends Phaser.Scene {
         // Enable collision handling
         this.physics.add.collider(my.sprite.player, this.groundLayer);
 
+        my.text.finish = this.add.bitmapText(150, 225, "rocketSquare", "You Win!");
+        my.text.finish.visible = false;
+
          // Handle collision detection with coins
          this.physics.add.overlap(my.sprite.player, this.coinGroup, (obj1, obj2) => {
             obj2.destroy(); // remove coin on overlap
@@ -74,6 +82,7 @@ class Platformer extends Phaser.Scene {
                 this.sound.play("finishSound", {
                     volume: 1   // Can adjust volume using this, goes from 0 to 1
                 });
+                my.text.finish.visible = true;
             }
         });
         
@@ -92,7 +101,7 @@ class Platformer extends Phaser.Scene {
           // movement vfx
 
             my.vfx.walking = this.add.particles(0, 0, "kenny-particles", {
-            frame: ['spark_09.png', 'spark_08.png', 'spark_11.png'],
+            frame: ['star_02.png', 'star_01.png', 'star_04.png'],
             // TODO: Try: add random: true
             scale: {start: 0.01, end: 0.05},
             // TODO: Try: maxAliveParticles: 8,
@@ -107,6 +116,8 @@ class Platformer extends Phaser.Scene {
         this.cameras.main.startFollow(my.sprite.player, true, 0.25, 0.25); // (target, [,roundPixels][,lerpX][,lerpY])
         this.cameras.main.setDeadzone(50, 50);
         this.cameras.main.setZoom(this.SCALE);
+
+        document.getElementById('description').innerHTML = '<h2>Platformer.js</h2><br>Left Arrow: left // Right Arrow: right // Up Arrow: jump // R: Restart Game <br>Collect all the coins to win!' 
     }
 
     update() {
